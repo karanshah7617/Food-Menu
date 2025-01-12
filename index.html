@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scratch and Reveal</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            margin: 0;
+            background-color: #f0f8ff;
+            font-family: Arial, sans-serif;
+        }
+
+        #scratchCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        #message {
+            font-size: 2rem;
+            color: #ff6347;
+            position: absolute;
+            z-index: -1;
+        }
+
+        #menu {
+            margin-top: 500px; /* Adjust to fit below the scratch card */
+            text-align: center;
+            background-color: #fff;
+            padding: 20px;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 600px;
+        }
+
+        #menu h2 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        #menu h3 {
+            color: #555;
+            margin: 15px 0 5px;
+        }
+
+        #menu ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        #menu ul li {
+            font-size: 1.2rem;
+            margin: 5px 0;
+            color: #444;
+        }
+    </style>
+</head>
+<body>
+    <div id="message">HAPPY MAKARSKRANTI</div>
+    <canvas id="scratchCanvas"></canvas>
+
+    <div id="menu">
+        <h2>Food Menu</h2>
+
+        <h3>Lunch</h3>
+        <ul>
+            <li>શ્રીખંડ</li>
+            <li>ઊંધિયું</li>
+            <li>મટર પનીર</li>
+            <li>કચોરી</li>
+            <li>પુરી</li>
+            <li>ભાત</li>
+            <li>દાળ</li>
+            <li>ફ્રાયમ્સ</li>
+        </ul>
+
+        <h3>Dinner</h3>
+        <ul>
+            <li>પાવ ભાજી</li>
+            <li>મંચુરિયન</li>
+            <li>પાપડ</li>
+        </ul>
+
+        <h3>Night Games</h3>
+        <ul>
+            <li>Fun Activites</li>
+            <li>Tambola</li>
+        </ul>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('scratchCanvas');
+        const ctx = canvas.getContext('2d');
+        const messageDiv = document.getElementById('message');
+
+        // Set canvas size to match viewport
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight / 2; // Half the screen height for the scratch area
+
+        // Fill canvas with a solid color
+        ctx.fillStyle = '#cccccc';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Add some texture or text
+        ctx.fillStyle = '#000';
+        ctx.font = '20px Arial';
+        ctx.fillText('Scratch here to reveal!', canvas.width / 2 - 100, canvas.height / 2);
+
+        // Scratch effect
+        let isDrawing = false;
+
+        function scratch(e) {
+            if (!isDrawing) return;
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            ctx.globalCompositeOperation = 'destination-out';
+            ctx.beginPath();
+            ctx.arc(x, y, 30, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Play scratch sound effect
+            const audio = new Audio('https://www.fesliyanstudios.com/play-mp3/387'); // Scratch sound effect URL
+            audio.play();
+        }
+
+        canvas.addEventListener('mousedown', () => {
+            isDrawing = true;
+        });
+
+        canvas.addEventListener('mousemove', scratch);
+
+        canvas.addEventListener('mouseup', () => {
+            isDrawing = false;
+        });
+
+        canvas.addEventListener('touchstart', (e) => {
+            isDrawing = true;
+            scratch(e.touches[0]);
+        });
+
+        canvas.addEventListener('touchmove', (e) => {
+            scratch(e.touches[0]);
+        });
+
+        canvas.addEventListener('touchend', () => {
+            isDrawing = false;
+        });
+    </script>
+</body>
+</html>
